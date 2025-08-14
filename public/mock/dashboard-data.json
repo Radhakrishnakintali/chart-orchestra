@@ -1,0 +1,62 @@
+{
+  "revenue": [
+    { "date": "2024-01-01", "value": 45000, "category": "Product Sales" },
+    { "date": "2024-01-02", "value": 52000, "category": "Product Sales" },
+    { "date": "2024-01-03", "value": 48000, "category": "Product Sales" },
+    { "date": "2024-01-04", "value": 61000, "category": "Product Sales" },
+    { "date": "2024-01-05", "value": 55000, "category": "Product Sales" },
+    { "date": "2024-01-06", "value": 67000, "category": "Product Sales" },
+    { "date": "2024-01-07", "value": 59000, "category": "Product Sales" },
+    { "date": "2024-01-08", "value": 72000, "category": "Product Sales" },
+    { "date": "2024-01-09", "value": 68000, "category": "Product Sales" },
+    { "date": "2024-01-10", "value": 84000, "category": "Product Sales" }
+  ],
+  "userActivity": [
+    { "date": "2024-01-01", "activeUsers": 1250, "newUsers": 180, "returningUsers": 1070 },
+    { "date": "2024-01-02", "activeUsers": 1380, "newUsers": 220, "returningUsers": 1160 },
+    { "date": "2024-01-03", "activeUsers": 1150, "newUsers": 165, "returningUsers": 985 },
+    { "date": "2024-01-04", "activeUsers": 1550, "newUsers": 280, "returningUsers": 1270 },
+    { "date": "2024-01-05", "activeUsers": 1420, "newUsers": 195, "returningUsers": 1225 },
+    { "date": "2024-01-06", "activeUsers": 1680, "newUsers": 310, "returningUsers": 1370 },
+    { "date": "2024-01-07", "activeUsers": 1590, "newUsers": 245, "returningUsers": 1345 },
+    { "date": "2024-01-08", "activeUsers": 1820, "newUsers": 380, "returningUsers": 1440 },
+    { "date": "2024-01-09", "activeUsers": 1750, "newUsers": 290, "returningUsers": 1460 },
+    { "date": "2024-01-10", "activeUsers": 1950, "newUsers": 420, "returningUsers": 1530 }
+  ],
+  "performanceMetrics": [
+    { "date": "2024-01-01", "loadTime": 2.3, "errorRate": 0.8, "uptime": 99.9 },
+    { "date": "2024-01-02", "loadTime": 2.1, "errorRate": 0.6, "uptime": 99.8 },
+    { "date": "2024-01-03", "loadTime": 2.5, "errorRate": 1.2, "uptime": 99.7 },
+    { "date": "2024-01-04", "loadTime": 1.9, "errorRate": 0.4, "uptime": 99.9 },
+    { "date": "2024-01-05", "loadTime": 2.0, "errorRate": 0.7, "uptime": 99.8 },
+    { "date": "2024-01-06", "loadTime": 1.8, "errorRate": 0.3, "uptime": 100.0 },
+    { "date": "2024-01-07", "loadTime": 2.2, "errorRate": 0.9, "uptime": 99.6 },
+    { "date": "2024-01-08", "loadTime": 1.7, "errorRate": 0.2, "uptime": 100.0 },
+    { "date": "2024-01-09", "loadTime": 2.4, "errorRate": 1.1, "uptime": 99.5 },
+    { "date": "2024-01-10", "loadTime": 1.6, "errorRate": 0.1, "uptime": 100.0 }
+  ],
+  "salesByCategory": [
+    { "name": "Electronics", "value": 450000, "percentage": 35 },
+    { "name": "Clothing", "value": 320000, "percentage": 25 },
+    { "name": "Books", "value": 190000, "percentage": 15 },
+    { "name": "Home & Garden", "value": 160000, "percentage": 12.5 },
+    { "name": "Sports", "value": 130000, "percentage": 10 },
+    { "name": "Others", "value": 32000, "percentage": 2.5 }
+  ],
+  "marketingChannels": [
+    { "channel": "Organic Search", "visitors": 15420, "conversions": 1234, "cost": 0 },
+    { "channel": "Paid Search", "visitors": 8950, "conversions": 892, "cost": 12500 },
+    { "channel": "Social Media", "visitors": 6780, "conversions": 543, "cost": 3200 },
+    { "channel": "Email", "visitors": 4560, "conversions": 789, "cost": 850 },
+    { "channel": "Direct", "visitors": 3200, "conversions": 456, "cost": 0 },
+    { "channel": "Referral", "visitors": 2100, "conversions": 187, "cost": 0 }
+  ],
+  "regionalSales": [
+    { "region": "North America", "sales": 420000, "growth": 12.5 },
+    { "region": "Europe", "sales": 380000, "growth": 8.3 },
+    { "region": "Asia Pacific", "sales": 290000, "growth": 15.7 },
+    { "region": "Latin America", "sales": 145000, "growth": 22.1 },
+    { "region": "Middle East", "sales": 95000, "growth": 18.9 },
+    { "region": "Africa", "sales": 62000, "growth": 25.4 }
+  ]
+}
