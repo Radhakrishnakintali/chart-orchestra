@@ -128,14 +128,16 @@ const ChartContainer = forwardRef<HTMLDivElement, ChartContainerProps>(({
             >
               <Minimize2 className="w-4 h-4" />
             </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setIsMaximized(true)}
-              className="border-dashboard-border hover:bg-chart-primary-bg"
-            >
-              <Maximize2 className="w-4 h-4" />
-            </Button>
+            {!isMaximized ? (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setIsMaximized(true)}
+                className="border-dashboard-border hover:bg-chart-primary-bg"
+              >
+                <Maximize2 className="w-4 h-4" />
+              </Button>
+            ) : null}
           </div>
         </div>
         
@@ -161,9 +163,9 @@ const ChartContainer = forwardRef<HTMLDivElement, ChartContainerProps>(({
                 variant="outline"
                 size="sm"
                 onClick={() => setIsMaximized(false)}
-                className="border-dashboard-border"
+                className="border-dashboard-border hover:bg-chart-primary-bg"
               >
-                <X className="w-4 h-4" />
+                <Minimize2 className="w-4 h-4" />
               </Button>
             </div>
           </DialogHeader>
