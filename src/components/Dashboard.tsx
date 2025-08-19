@@ -1,8 +1,10 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
+import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
+import { arrayMove, SortableContext, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import { useDashboardData } from '@/hooks/useDashboardData';
 import { useDateFilter } from '@/hooks/useDateFilter';
 import DashboardHeader from '@/components/DashboardHeader';
-import ChartContainer from '@/components/ChartContainer';
+import DraggableChartContainer from '@/components/DraggableChartContainer';
 import LineChart from '@/charts/LineChart';
 import BarChart from '@/charts/BarChart';
 import AreaChart from '@/charts/AreaChart';
@@ -17,6 +19,37 @@ const Dashboard: React.FC = () => {
   const { data, loading, error } = useDashboardData();
   const { dateRange, setDateRange, filterDataByDate } = useDateFilter();
   const dashboardRef = useRef<HTMLDivElement>(null);
+  
+  // Chart order state for drag and drop
+  const [chartOrder, setChartOrder] = useState([
+    'revenue-trends',
+    'user-activity', 
+    'performance-metrics',
+    'sales-category',
+    'performance-correlation',
+    'marketing-channels',
+    'regional-sales'
+  ]);
+
+  // Drag and drop sensors
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  const handleDragEnd = (event: any) => {
+    const { active, over } = event;
+
+    if (active.id !== over.id) {
+      setChartOrder((items) => {
+        const oldIndex = items.indexOf(active.id);
+        const newIndex = items.indexOf(over.id);
+        return arrayMove(items, oldIndex, newIndex);
+      });
+    }
+  };
 
   const handleRefresh = () => {
     window.location.reload();
@@ -72,6 +105,121 @@ const Dashboard: React.FC = () => {
     visitors: item.visitors / 100, // Scale down for better visualization
     roi: item.conversions / (item.cost || 1) * 100
   }));
+
+  // Chart components mapping
+  const chartComponents = {
+    'revenue-trends': (
+      <DraggableChartContainer
+        id="revenue-trends"
+        title="Revenue Trends"
+        data={data.revenue}
+        globalDateRange={dateRange}
+        onGlobalDateChange={setDateRange}
+        enableLocalDateFilter={true}
+      >
+        <LineChart
+          data={filterDataByDate(data.revenue)}
+          dataKeys={['value']}
+          colors={['hsl(var(--chart-primary))']}
+          height={350}
+        />
+      </DraggableChartContainer>
+    ),
+    'user-activity': (
+      <DraggableChartContainer
+        id="user-activity"
+        title="User Activity"
+        data={data.userActivity}
+        globalDateRange={dateRange}
+        onGlobalDateChange={setDateRange}
+        enableLocalDateFilter={true}
+      >
+        <AreaChart
+          data={filterDataByDate(data.userActivity)}
+          dataKeys={['activeUsers', 'newUsers', 'returningUsers']}
+          colors={['hsl(var(--chart-primary))', 'hsl(var(--chart-secondary))', 'hsl(var(--chart-accent))']}
+          height={350}
+          stacked={true}
+        />
+      </DraggableChartContainer>
+    ),
+    'performance-metrics': (
+      <DraggableChartContainer
+        id="performance-metrics"
+        title="Performance Metrics"
+        data={data.performanceMetrics}
+        globalDateRange={dateRange}
+        onGlobalDateChange={setDateRange}
+        enableLocalDateFilter={true}
+      >
+        <BarChart
+          data={filterDataByDate(data.performanceMetrics)}
+          dataKeys={['loadTime', 'errorRate']}
+          colors={['hsl(var(--chart-warning))', 'hsl(var(--chart-danger))']}
+          height={350}
+        />
+      </DraggableChartContainer>
+    ),
+    'sales-category': (
+      <DraggableChartContainer
+        id="sales-category"
+        title="Sales by Category"
+        data={data.salesByCategory}
+      >
+        <PieChart
+          data={data.salesByCategory}
+          dataKey="value"
+          nameKey="name"
+          height={350}
+        />
+      </DraggableChartContainer>
+    ),
+    'performance-correlation': (
+      <DraggableChartContainer
+        id="performance-correlation"
+        title="Performance Correlation"
+        data={scatterData}
+      >
+        <ScatterChart
+          data={scatterData}
+          xDataKey="loadTime"
+          yDataKey="errorRate"
+          colors={['hsl(var(--chart-info))']}
+          height={350}
+        />
+      </DraggableChartContainer>
+    ),
+    'marketing-channels': (
+      <DraggableChartContainer
+        id="marketing-channels"
+        title="Marketing Channels Performance"
+        data={radarData}
+      >
+        <RadarChart
+          data={radarData}
+          dataKeys={['conversions', 'visitors', 'roi']}
+          colors={['hsl(var(--chart-primary))', 'hsl(var(--chart-secondary))', 'hsl(var(--chart-accent))']}
+          height={350}
+        />
+      </DraggableChartContainer>
+    ),
+    'regional-sales': (
+      <DraggableChartContainer
+        id="regional-sales"
+        title="Regional Sales Performance"
+        data={data.regionalSales}
+        className="col-span-full"
+      >
+        <BarChart
+          data={data.regionalSales}
+          dataKeys={['sales', 'growth']}
+          xAxisKey="region"
+          colors={['hsl(var(--chart-primary))', 'hsl(var(--chart-success))']}
+          height={400}
+        />
+      </DraggableChartContainer>
+    )
+  };
 
   return (
     <div className="min-h-screen bg-gradient-dashboard">
@@ -141,110 +289,25 @@ const Dashboard: React.FC = () => {
           </Card>
         </div>
 
-        {/* Charts Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-          <ChartContainer
-            title="Revenue Trends"
-            data={data.revenue}
-            globalDateRange={dateRange}
-            onGlobalDateChange={setDateRange}
-            enableLocalDateFilter={true}
-          >
-            <LineChart
-              data={filterDataByDate(data.revenue)}
-              dataKeys={['value']}
-              colors={['hsl(var(--chart-primary))']}
-              height={350}
-            />
-          </ChartContainer>
-
-          <ChartContainer
-            title="User Activity"
-            data={data.userActivity}
-            globalDateRange={dateRange}
-            onGlobalDateChange={setDateRange}
-            enableLocalDateFilter={true}
-          >
-            <AreaChart
-              data={filterDataByDate(data.userActivity)}
-              dataKeys={['activeUsers', 'newUsers', 'returningUsers']}
-              colors={['hsl(var(--chart-primary))', 'hsl(var(--chart-secondary))', 'hsl(var(--chart-accent))']}
-              height={350}
-              stacked={true}
-            />
-          </ChartContainer>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-          <ChartContainer
-            title="Performance Metrics"
-            data={data.performanceMetrics}
-            globalDateRange={dateRange}
-            onGlobalDateChange={setDateRange}
-            enableLocalDateFilter={true}
-          >
-            <BarChart
-              data={filterDataByDate(data.performanceMetrics)}
-              dataKeys={['loadTime', 'errorRate']}
-              colors={['hsl(var(--chart-warning))', 'hsl(var(--chart-danger))']}
-              height={350}
-            />
-          </ChartContainer>
-
-          <ChartContainer
-            title="Sales by Category"
-            data={data.salesByCategory}
-          >
-            <PieChart
-              data={data.salesByCategory}
-              dataKey="value"
-              nameKey="name"
-              height={350}
-            />
-          </ChartContainer>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-          <ChartContainer
-            title="Performance Correlation"
-            data={scatterData}
-          >
-            <ScatterChart
-              data={scatterData}
-              xDataKey="loadTime"
-              yDataKey="errorRate"
-              colors={['hsl(var(--chart-info))']}
-              height={350}
-            />
-          </ChartContainer>
-
-          <ChartContainer
-            title="Marketing Channels Performance"
-            data={radarData}
-          >
-            <RadarChart
-              data={radarData}
-              dataKeys={['conversions', 'visitors', 'roi']}
-              colors={['hsl(var(--chart-primary))', 'hsl(var(--chart-secondary))', 'hsl(var(--chart-accent))']}
-              height={350}
-            />
-          </ChartContainer>
-        </div>
-
-        <div className="grid grid-cols-1 gap-6">
-          <ChartContainer
-            title="Regional Sales Performance"
-            data={data.regionalSales}
-          >
-            <BarChart
-              data={data.regionalSales}
-              dataKeys={['sales', 'growth']}
-              xAxisKey="region"
-              colors={['hsl(var(--chart-primary))', 'hsl(var(--chart-success))']}
-              height={400}
-            />
-          </ChartContainer>
-        </div>
+        {/* Draggable Charts */}
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
+        >
+          <SortableContext items={chartOrder}>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {chartOrder.map((chartId) => (
+                <div
+                  key={chartId}
+                  className={chartId === 'regional-sales' ? 'lg:col-span-2' : ''}
+                >
+                  {chartComponents[chartId as keyof typeof chartComponents]}
+                </div>
+              ))}
+            </div>
+          </SortableContext>
+        </DndContext>
       </div>
     </div>
   );
