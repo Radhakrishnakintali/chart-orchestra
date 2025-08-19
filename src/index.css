@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* React Grid Layout Styles */
+@import '../styles/react-grid-layout.css';
+
 /* Advanced Dashboard Design System */
 
 @layer base {
