@@ -1,92 +1,168 @@
-# Advanced Analytics Dashboard
+# Responsive Dashboard with React Grid Layout
 
-A powerful, modular React-based dashboard featuring dynamic charts, data filtering, export capabilities, and beautiful responsive design.
+A comprehensive React dashboard with draggable, resizable charts that automatically adapt to different screen sizes while maintaining minimum readability constraints.
 
 ![Dashboard Preview](https://via.placeholder.com/800x400/4A90E2/FFFFFF?text=Advanced+Analytics+Dashboard)
 
-## ✨ Features
+## Features
 
-### 📊 Multiple Chart Types
-- **Line Charts** - Revenue trends and time series data
-- **Bar Charts** - Performance metrics and categorical comparisons  
-- **Area Charts** - Stacked user activity visualization
-- **Pie Charts** - Sales distribution by category
-- **Scatter Plots** - Performance correlation analysis
-- **Radar Charts** - Multi-dimensional marketing channel analysis
+### 📊 Interactive Dashboard
+- **Drag & Drop**: Rearrange charts using `react-grid-layout`
+- **Resizable Charts**: Resize charts while respecting minimum dimensions
+- **Responsive Design**: Automatic layout adaptation for Desktop, Tablet, and Mobile
 
-### 🎛️ Advanced Filtering
-- **Global Date Range Filter** - Apply date filters to all charts simultaneously
-- **Per-Chart Date Filters** - Individual chart-level date filtering
-- **Real-time Data Updates** - Dynamic data filtering and visualization
+### 📱 Responsive Breakpoints
+- **Desktop/Laptop** (≥1200px): Min 400×300px chart cards
+- **Tablet** (768-1199px): Min 300×250px chart cards  
+- **Mobile** (<768px): Min 250×200px chart cards
 
-### 📤 Export Capabilities
-- **Excel Export (.xlsx)** - Export chart data to Excel format
-- **CSV Export** - Export data in CSV format
-- **Print Functionality** - Print individual charts or entire dashboard
-- **Modal View** - Maximize charts for detailed analysis
+### 🎛️ Chart Controls
+- **Kebab Menu**: Date filter, print, and export options per chart
+- **Maximize/Minimize**: Toggle full-screen chart view
+- **Date Filtering**: Per-chart date range selection with modal
+- **Export Options**: CSV and Excel download per chart
 
-### 🎨 Modern Design
-- **Responsive Layout** - Optimized for desktop, tablet, and mobile
-- **Dark/Light Theme Ready** - Built with semantic design tokens
-- **Beautiful Animations** - Smooth transitions and interactions
-- **Professional UI** - Clean, modern interface with shadcn/ui components
+### 📈 Chart Types
+- Line Charts (Revenue trends)
+- Area Charts (User activity) 
+- Bar Charts (Performance metrics, Regional sales)
+- Pie Charts (Sales by category)
+- Scatter Charts (Performance correlation)
+- Radar Charts (Marketing channels)
 
-### ⚡ Performance Features
-- **Offline Functionality** - Works with mock data for development
-- **Fast Loading** - Optimized React components with memoization
-- **TypeScript** - Full type safety and better developer experience
-- **Modular Architecture** - Easy to extend and maintain
+## Tech Stack
 
-## 🚀 Quick Start
+- **React 18** with TypeScript
+- **Recharts** for data visualization
+- **react-grid-layout** for drag & resize functionality
+- **Tailwind CSS** with custom design system
+- **Shadcn/ui** components
+- **date-fns** for date handling
 
-### Prerequisites
-- Node.js 16+ 
-- npm or yarn
-
-### Installation & Setup
+## Installation & Setup
 
 ```bash
-# Clone the repository
-git clone <your-repo-url>
-cd advanced-dashboard
-
 # Install dependencies
 npm install
 
 # Start development server
 npm run dev
+
+# Build for production
+npm run build
 ```
 
-The dashboard will be available at `http://localhost:8080`
-
-### 📁 Project Structure
+## Project Structure
 
 ```
 src/
-├── components/          # Reusable UI components
-│   ├── ui/             # Shadcn/UI base components
-│   ├── Dashboard.tsx   # Main dashboard container
-│   ├── DashboardHeader.tsx # Global controls
-│   └── ChartContainer.tsx  # Chart wrapper with actions
-├── charts/             # Chart implementations
-│   ├── AreaChart.tsx
-│   ├── BarChart.tsx
+├── components/
+│   ├── ui/              # Shadcn UI components
+│   ├── Dashboard.tsx    # Main dashboard layout
+│   ├── ChartContainer.tsx # Chart wrapper with controls
+│   └── DashboardHeader.tsx
+├── charts/              # Individual chart components
 │   ├── LineChart.tsx
+│   ├── BarChart.tsx
+│   ├── AreaChart.tsx
 │   ├── PieChart.tsx
-│   ├── RadarChart.tsx
-│   └── ScatterChart.tsx
-├── hooks/              # Custom React hooks
-│   ├── useDateFilter.ts
-│   └── useDashboardData.ts
-├── utils/              # Utility functions
-│   └── exportUtils.ts
-└── pages/              # Route components
-    └── Index.tsx
-
-public/
-└── mock/               # Mock data for offline mode
-    └── dashboard-data.json
+│   ├── ScatterChart.tsx
+│   └── RadarChart.tsx
+├── config/
+│   └── layout.ts        # Responsive layout configuration
+├── hooks/               # Custom React hooks
+│   ├── useDashboardData.ts
+│   └── useDateFilter.ts
+├── styles/
+│   └── react-grid-layout.css # Grid layout styles
+└── utils/
+    └── exportUtils.ts   # CSV/Excel export utilities
 ```
+
+## Responsive Layout Architecture
+
+### Layout Configuration (`src/config/layout.ts`)
+
+The responsive behavior is controlled by centralized configuration:
+
+```typescript
+export const CHART_DIMENSIONS = {
+  lg: { minWidth: 400, minHeight: 300 },  // Desktop
+  md: { minWidth: 300, minHeight: 250 },  // Tablet  
+  sm: { minWidth: 250, minHeight: 200 }   // Mobile
+};
+```
+
+### Breakpoint System
+
+- **CSS Custom Properties**: Dynamic minimum dimensions via CSS variables
+- **Grid Constraints**: Minimum grid units prevent charts from becoming unreadable
+- **Responsive Layouts**: Different default layouts per breakpoint
+
+### Drag & Resize Constraints
+
+Charts maintain minimum readable dimensions during:
+- Initial render based on screen size
+- User dragging and resizing
+- Layout changes from maximize/minimize
+- Date filter applications
+
+## Key Features Implementation
+
+### 1. Responsive Chart Cards
+```css
+.react-grid-item {
+  min-width: var(--chart-min-width, 250px);
+  min-height: var(--chart-min-height, 200px);
+}
+```
+
+### 2. Breakpoint-Specific Constraints
+```typescript
+const getMinConstraints = (breakpoint) => ({
+  w: Math.ceil(dimensions.minWidth / gridUnitWidth),
+  h: Math.ceil(dimensions.minHeight / rowHeight)
+});
+```
+
+### 3. Per-Chart Date Filtering
+Each chart maintains its own date range state while respecting global dashboard filters.
+
+### 4. Export Functionality
+- **CSV Export**: Raw data export with date formatting
+- **Excel Export**: Formatted spreadsheet with chart metadata
+- **Print**: Optimized chart printing with responsive layout
+
+## Development Guidelines
+
+### Adding New Charts
+1. Create chart component in `src/charts/`
+2. Add chart configuration to `Dashboard.tsx`
+3. Update `DEFAULT_LAYOUTS` in `src/config/layout.ts`
+
+### Customizing Responsive Behavior
+- Modify `CHART_DIMENSIONS` for different minimum sizes
+- Update `BREAKPOINTS` for custom screen size targets
+- Adjust `DEFAULT_LAYOUTS` for optimal chart arrangements
+
+### Styling Guidelines
+- Use Tailwind semantic tokens from `index.css`
+- Maintain HSL color format for theme consistency
+- Update CSS custom properties for responsive behavior
+
+## Performance Considerations
+
+- **Lazy Loading**: Charts render only when visible
+- **Memoized Components**: Prevent unnecessary re-renders
+- **Optimized Layouts**: Efficient grid calculations
+- **Debounced Resize**: Smooth dragging performance
+
+## Browser Support
+
+- Chrome 90+
+- Firefox 88+
+- Safari 14+
+- Edge 90+
 
 ## 🎯 Usage Examples
 

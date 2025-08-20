@@ -4,6 +4,13 @@ import { useDashboardData } from '@/hooks/useDashboardData';
 import { useDateFilter } from '@/hooks/useDateFilter';
 import DashboardHeader from '@/components/DashboardHeader';
 import ChartContainer from '@/components/ChartContainer';
+import { 
+  BREAKPOINTS, 
+  GRID_COLS, 
+  GRID_CONFIG, 
+  DEFAULT_LAYOUTS,
+  CHART_DIMENSIONS 
+} from '@/config/layout';
 import LineChart from '@/charts/LineChart';
 import BarChart from '@/charts/BarChart';
 import AreaChart from '@/charts/AreaChart';
@@ -23,36 +30,8 @@ const Dashboard: React.FC = () => {
   const { dateRange, setDateRange, filterDataByDate } = useDateFilter();
   const dashboardRef = useRef<HTMLDivElement>(null);
   
-  // Grid layout configuration
-  const [layouts, setLayouts] = useState({
-    lg: [
-      { i: 'revenue-trends', x: 0, y: 0, w: 6, h: 6 },
-      { i: 'user-activity', x: 6, y: 0, w: 6, h: 6 },
-      { i: 'performance-metrics', x: 0, y: 6, w: 4, h: 6 },
-      { i: 'sales-category', x: 4, y: 6, w: 4, h: 6 },
-      { i: 'performance-correlation', x: 8, y: 6, w: 4, h: 6 },
-      { i: 'marketing-channels', x: 0, y: 12, w: 6, h: 6 },
-      { i: 'regional-sales', x: 6, y: 12, w: 6, h: 6 }
-    ],
-    md: [
-      { i: 'revenue-trends', x: 0, y: 0, w: 6, h: 6 },
-      { i: 'user-activity', x: 6, y: 0, w: 6, h: 6 },
-      { i: 'performance-metrics', x: 0, y: 6, w: 6, h: 6 },
-      { i: 'sales-category', x: 6, y: 6, w: 6, h: 6 },
-      { i: 'performance-correlation', x: 0, y: 12, w: 6, h: 6 },
-      { i: 'marketing-channels', x: 6, y: 12, w: 6, h: 6 },
-      { i: 'regional-sales', x: 0, y: 18, w: 12, h: 6 }
-    ],
-    sm: [
-      { i: 'revenue-trends', x: 0, y: 0, w: 12, h: 6 },
-      { i: 'user-activity', x: 0, y: 6, w: 12, h: 6 },
-      { i: 'performance-metrics', x: 0, y: 12, w: 12, h: 6 },
-      { i: 'sales-category', x: 0, y: 18, w: 12, h: 6 },
-      { i: 'performance-correlation', x: 0, y: 24, w: 12, h: 6 },
-      { i: 'marketing-channels', x: 0, y: 30, w: 12, h: 6 },
-      { i: 'regional-sales', x: 0, y: 36, w: 12, h: 6 }
-    ]
-  });
+  // Grid layout configuration with responsive constraints
+  const [layouts, setLayouts] = useState(DEFAULT_LAYOUTS);
 
   const handleLayoutChange = (layout: any, layouts: any) => {
     setLayouts(layouts);
@@ -277,15 +256,15 @@ const Dashboard: React.FC = () => {
           className="layout"
           layouts={layouts}
           onLayoutChange={handleLayoutChange}
-          breakpoints={{ lg: 1200, md: 996, sm: 768 }}
-          cols={{ lg: 12, md: 12, sm: 12 }}
-          rowHeight={60}
-          isDraggable={true}
-          isResizable={true}
-          margin={[16, 16]}
-          containerPadding={[0, 0]}
-          compactType="vertical"
-          preventCollision={false}
+          breakpoints={BREAKPOINTS}
+          cols={GRID_COLS}
+          rowHeight={GRID_CONFIG.rowHeight}
+          isDraggable={GRID_CONFIG.isDraggable}
+          isResizable={GRID_CONFIG.isResizable}
+          margin={GRID_CONFIG.margin}
+          containerPadding={GRID_CONFIG.containerPadding}
+          compactType={GRID_CONFIG.compactType}
+          preventCollision={GRID_CONFIG.preventCollision}
         >
           {Object.entries(chartData).map(([chartId, chart]) => (
             <div key={chartId} className="grid-item">

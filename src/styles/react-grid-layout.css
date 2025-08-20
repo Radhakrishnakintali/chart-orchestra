@@ -6,6 +6,8 @@
 .react-grid-item {
   transition: transform 200ms ease, box-shadow 200ms ease;
   background: transparent;
+  min-width: var(--chart-min-width, 250px);
+  min-height: var(--chart-min-height, 200px);
 }
 
 .react-grid-item.cssTransforms {
@@ -60,7 +62,26 @@
 }
 
 /* Responsive adjustments */
-@media (max-width: 768px) {
+@media (min-width: 1200px) {
+  .react-grid-item {
+    --chart-min-width: 400px;
+    --chart-min-height: 300px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+  .react-grid-item {
+    --chart-min-width: 300px;
+    --chart-min-height: 250px;
+  }
+}
+
+@media (max-width: 767px) {
+  .react-grid-item {
+    --chart-min-width: 250px;
+    --chart-min-height: 200px;
+  }
+  
   .react-grid-item > .react-resizable-handle {
     display: none;
   }
