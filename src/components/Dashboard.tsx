@@ -271,9 +271,6 @@ const Dashboard: React.FC = () => {
               <ChartContainer
                 title={chart.title}
                 data={chart.data}
-                globalDateRange={dateRange}
-                onGlobalDateChange={setDateRange}
-                enableLocalDateFilter={true}
                 className="h-full"
               >
                 {chart.component}
