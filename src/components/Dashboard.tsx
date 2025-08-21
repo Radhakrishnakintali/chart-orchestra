@@ -265,6 +265,7 @@ const Dashboard: React.FC = () => {
           containerPadding={GRID_CONFIG.containerPadding}
           compactType={GRID_CONFIG.compactType}
           preventCollision={GRID_CONFIG.preventCollision}
+          dragHandleClassName="drag-handle"
         >
           {Object.entries(chartData).map(([chartId, chart]) => (
             <div key={chartId} className="grid-item">

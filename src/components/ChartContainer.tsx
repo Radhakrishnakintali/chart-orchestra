@@ -76,7 +76,7 @@ const ChartContainer = forwardRef<HTMLDivElement, ChartContainerProps>(({
     <Card ref={ref} className={`bg-dashboard-card shadow-card border-dashboard-border transition-smooth ${className}`}>
       <div className="p-6">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-foreground">{title}</h3>
+          <h3 className="text-lg font-semibold text-foreground drag-handle cursor-move flex-1 mr-4">{title}</h3>
           <div className="flex items-center gap-2 pointer-events-auto relative z-10">
             <Select value={selectedOption} onValueChange={handleDateRangeChange}>
               <SelectTrigger className="w-[140px] border-dashboard-border bg-dashboard-card">
