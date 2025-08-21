@@ -162,17 +162,58 @@ const ChartContainer = forwardRef<HTMLDivElement, ChartContainerProps>(({
           <DialogHeader>
             <div className="flex items-center justify-between">
               <DialogTitle className="text-xl font-semibold">{title}</DialogTitle>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setIsMaximized(false);
-                }}
-                className="border-dashboard-border hover:bg-chart-primary-bg"
-              >
-                <Minimize2 className="w-4 h-4" />
-              </Button>
+              <div className="flex items-center gap-2">
+                <Select value={selectedOption} onValueChange={handleDateRangeChange}>
+                  <SelectTrigger className="w-[140px] border-dashboard-border bg-dashboard-card">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="bg-dashboard-card border-dashboard-border">
+                    {DATE_RANGE_OPTIONS.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="border-dashboard-border hover:bg-chart-primary-bg"
+                    >
+                      <MoreVertical className="w-4 h-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-48 bg-dashboard-card border-dashboard-border">
+                    <DropdownMenuItem onClick={handlePrint} className="cursor-pointer">
+                      <Printer className="w-4 h-4 mr-2" />
+                      Print
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleExportCSV} className="cursor-pointer">
+                      <Download className="w-4 h-4 mr-2" />
+                      Download CSV
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleExportExcel} className="cursor-pointer">
+                      <FileSpreadsheet className="w-4 h-4 mr-2" />
+                      Download Excel
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+                
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsMaximized(false);
+                  }}
+                  className="border-dashboard-border hover:bg-chart-primary-bg"
+                >
+                  <Minimize2 className="w-4 h-4" />
+                </Button>
+              </div>
             </div>
           </DialogHeader>
           <div className="flex-1 overflow-hidden">
