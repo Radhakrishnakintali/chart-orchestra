@@ -41,6 +41,8 @@ const ChartContainer = forwardRef<HTMLDivElement, ChartContainerProps>(({
   className = ""
 }, ref) => {
   const [isMaximized, setIsMaximized] = useState(false);
+  
+  console.log("ChartContainer rendered, isMaximized:", isMaximized);
   const chartRef = useRef<HTMLDivElement>(null);
   
   const { 
@@ -75,7 +77,7 @@ const ChartContainer = forwardRef<HTMLDivElement, ChartContainerProps>(({
       <div className="p-6">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-foreground">{title}</h3>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 pointer-events-auto relative z-10">
             <Select value={selectedOption} onValueChange={handleDateRangeChange}>
               <SelectTrigger className="w-[140px] border-dashboard-border bg-dashboard-card">
                 <SelectValue />
@@ -94,9 +96,11 @@ const ChartContainer = forwardRef<HTMLDivElement, ChartContainerProps>(({
               size="sm"
               onClick={(e) => {
                 e.stopPropagation();
+                e.preventDefault();
+                console.log("Maximize button clicked!");
                 setIsMaximized(true);
               }}
-              className="border-dashboard-border hover:bg-chart-primary-bg"
+              className="border-dashboard-border hover:bg-chart-primary-bg pointer-events-auto"
             >
               <Maximize2 className="w-4 h-4" />
             </Button>
