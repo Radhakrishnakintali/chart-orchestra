@@ -92,7 +92,10 @@ const ChartContainer = forwardRef<HTMLDivElement, ChartContainerProps>(({
             <Button
               variant="outline"
               size="sm"
-              onClick={() => setIsMaximized(true)}
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsMaximized(true);
+              }}
               className="border-dashboard-border hover:bg-chart-primary-bg"
             >
               <Maximize2 className="w-4 h-4" />
@@ -103,6 +106,7 @@ const ChartContainer = forwardRef<HTMLDivElement, ChartContainerProps>(({
                 <Button
                   variant="outline"
                   size="sm"
+                  onClick={(e) => e.stopPropagation()}
                   className="border-dashboard-border hover:bg-chart-primary-bg"
                 >
                   <MoreVertical className="w-4 h-4" />
@@ -145,7 +149,10 @@ const ChartContainer = forwardRef<HTMLDivElement, ChartContainerProps>(({
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => setIsMaximized(false)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsMaximized(false);
+                }}
                 className="border-dashboard-border hover:bg-chart-primary-bg"
               >
                 <Minimize2 className="w-4 h-4" />
