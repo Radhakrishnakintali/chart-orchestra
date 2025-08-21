@@ -77,7 +77,12 @@ const ChartContainer = forwardRef<HTMLDivElement, ChartContainerProps>(({
       <div className="p-6">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-foreground drag-handle cursor-move flex-1 mr-4">{title}</h3>
-          <div className="flex items-center gap-2 pointer-events-auto relative z-10">
+          <div 
+            className="flex items-center gap-2 relative z-50"
+            style={{ pointerEvents: 'auto' }}
+            onMouseDown={(e) => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}
+          >
             <Select value={selectedOption} onValueChange={handleDateRangeChange}>
               <SelectTrigger className="w-[140px] border-dashboard-border bg-dashboard-card">
                 <SelectValue />
@@ -94,13 +99,18 @@ const ChartContainer = forwardRef<HTMLDivElement, ChartContainerProps>(({
             <Button
               variant="outline"
               size="sm"
+              onMouseDown={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+              }}
               onClick={(e) => {
                 e.stopPropagation();
                 e.preventDefault();
                 console.log("Maximize button clicked!");
                 setIsMaximized(true);
               }}
-              className="border-dashboard-border hover:bg-chart-primary-bg pointer-events-auto"
+              className="border-dashboard-border hover:bg-chart-primary-bg"
+              style={{ pointerEvents: 'auto', position: 'relative', zIndex: 100 }}
             >
               <Maximize2 className="w-4 h-4" />
             </Button>
@@ -110,8 +120,10 @@ const ChartContainer = forwardRef<HTMLDivElement, ChartContainerProps>(({
                 <Button
                   variant="outline"
                   size="sm"
+                  onMouseDown={(e) => e.stopPropagation()}
                   onClick={(e) => e.stopPropagation()}
                   className="border-dashboard-border hover:bg-chart-primary-bg"
+                  style={{ pointerEvents: 'auto', position: 'relative', zIndex: 100 }}
                 >
                   <MoreVertical className="w-4 h-4" />
                 </Button>
