@@ -1,62 +1,56 @@
 {
-  "revenue": [
-    { "date": "2024-01-01", "value": 45000, "category": "Product Sales" },
-    { "date": "2024-01-02", "value": 52000, "category": "Product Sales" },
-    { "date": "2024-01-03", "value": 48000, "category": "Product Sales" },
-    { "date": "2024-01-04", "value": 61000, "category": "Product Sales" },
-    { "date": "2024-01-05", "value": 55000, "category": "Product Sales" },
-    { "date": "2024-01-06", "value": 67000, "category": "Product Sales" },
-    { "date": "2024-01-07", "value": 59000, "category": "Product Sales" },
-    { "date": "2024-01-08", "value": 72000, "category": "Product Sales" },
-    { "date": "2024-01-09", "value": 68000, "category": "Product Sales" },
-    { "date": "2024-01-10", "value": 84000, "category": "Product Sales" }
+  "deviations": [
+    { "date": "2024-01-01", "total": 12, "critical": 2, "major": 4, "minor": 6, "category": "Manufacturing" },
+    { "date": "2024-01-02", "total": 8, "critical": 1, "major": 3, "minor": 4, "category": "Quality Control" },
+    { "date": "2024-01-03", "total": 15, "critical": 3, "major": 5, "minor": 7, "category": "Equipment" },
+    { "date": "2024-01-04", "total": 6, "critical": 0, "major": 2, "minor": 4, "category": "Documentation" },
+    { "date": "2024-01-05", "total": 11, "critical": 1, "major": 4, "minor": 6, "category": "Manufacturing" },
+    { "date": "2024-01-06", "total": 9, "critical": 2, "major": 2, "minor": 5, "category": "Quality Control" },
+    { "date": "2024-01-07", "total": 7, "critical": 0, "major": 3, "minor": 4, "category": "Equipment" },
+    { "date": "2024-01-08", "total": 13, "critical": 2, "major": 6, "minor": 5, "category": "Manufacturing" },
+    { "date": "2024-01-09", "total": 10, "critical": 1, "major": 3, "minor": 6, "category": "Documentation" },
+    { "date": "2024-01-10", "total": 14, "critical": 3, "major": 4, "minor": 7, "category": "Quality Control" }
   ],
-  "userActivity": [
-    { "date": "2024-01-01", "activeUsers": 1250, "newUsers": 180, "returningUsers": 1070 },
-    { "date": "2024-01-02", "activeUsers": 1380, "newUsers": 220, "returningUsers": 1160 },
-    { "date": "2024-01-03", "activeUsers": 1150, "newUsers": 165, "returningUsers": 985 },
-    { "date": "2024-01-04", "activeUsers": 1550, "newUsers": 280, "returningUsers": 1270 },
-    { "date": "2024-01-05", "activeUsers": 1420, "newUsers": 195, "returningUsers": 1225 },
-    { "date": "2024-01-06", "activeUsers": 1680, "newUsers": 310, "returningUsers": 1370 },
-    { "date": "2024-01-07", "activeUsers": 1590, "newUsers": 245, "returningUsers": 1345 },
-    { "date": "2024-01-08", "activeUsers": 1820, "newUsers": 380, "returningUsers": 1440 },
-    { "date": "2024-01-09", "activeUsers": 1750, "newUsers": 290, "returningUsers": 1460 },
-    { "date": "2024-01-10", "activeUsers": 1950, "newUsers": 420, "returningUsers": 1530 }
+  "capa": [
+    { "date": "2024-01-01", "open": 25, "inProgress": 18, "closed": 32, "overdue": 5, "effectiveness": 85 },
+    { "date": "2024-01-02", "open": 23, "inProgress": 20, "closed": 34, "overdue": 4, "effectiveness": 87 },
+    { "date": "2024-01-03", "open": 28, "inProgress": 22, "closed": 30, "overdue": 6, "effectiveness": 82 },
+    { "date": "2024-01-04", "open": 21, "inProgress": 19, "closed": 36, "overdue": 3, "effectiveness": 89 },
+    { "date": "2024-01-05", "open": 26, "inProgress": 21, "closed": 33, "overdue": 5, "effectiveness": 84 },
+    { "date": "2024-01-06", "open": 24, "inProgress": 17, "closed": 35, "overdue": 4, "effectiveness": 88 },
+    { "date": "2024-01-07", "open": 22, "inProgress": 23, "closed": 31, "overdue": 3, "effectiveness": 86 },
+    { "date": "2024-01-08", "open": 29, "inProgress": 19, "closed": 37, "overdue": 7, "effectiveness": 81 },
+    { "date": "2024-01-09", "open": 20, "inProgress": 25, "closed": 38, "overdue": 2, "effectiveness": 91 },
+    { "date": "2024-01-10", "open": 27, "inProgress": 16, "closed": 40, "overdue": 4, "effectiveness": 87 }
   ],
-  "performanceMetrics": [
-    { "date": "2024-01-01", "loadTime": 2.3, "errorRate": 0.8, "uptime": 99.9 },
-    { "date": "2024-01-02", "loadTime": 2.1, "errorRate": 0.6, "uptime": 99.8 },
-    { "date": "2024-01-03", "loadTime": 2.5, "errorRate": 1.2, "uptime": 99.7 },
-    { "date": "2024-01-04", "loadTime": 1.9, "errorRate": 0.4, "uptime": 99.9 },
-    { "date": "2024-01-05", "loadTime": 2.0, "errorRate": 0.7, "uptime": 99.8 },
-    { "date": "2024-01-06", "loadTime": 1.8, "errorRate": 0.3, "uptime": 100.0 },
-    { "date": "2024-01-07", "loadTime": 2.2, "errorRate": 0.9, "uptime": 99.6 },
-    { "date": "2024-01-08", "loadTime": 1.7, "errorRate": 0.2, "uptime": 100.0 },
-    { "date": "2024-01-09", "loadTime": 2.4, "errorRate": 1.1, "uptime": 99.5 },
-    { "date": "2024-01-10", "loadTime": 1.6, "errorRate": 0.1, "uptime": 100.0 }
+  "compliance": [
+    { "date": "2024-01-01", "gmp": 98.5, "fda": 97.2, "iso": 99.1, "internal": 95.8, "training": 92.3 },
+    { "date": "2024-01-02", "gmp": 97.8, "fda": 98.1, "iso": 98.7, "internal": 96.2, "training": 93.5 },
+    { "date": "2024-01-03", "gmp": 99.2, "fda": 96.9, "iso": 99.3, "internal": 94.9, "training": 91.8 },
+    { "date": "2024-01-04", "gmp": 98.1, "fda": 97.8, "iso": 98.9, "internal": 97.1, "training": 94.2 },
+    { "date": "2024-01-05", "gmp": 97.6, "fda": 98.5, "iso": 99.0, "internal": 95.5, "training": 92.9 },
+    { "date": "2024-01-06", "gmp": 98.9, "fda": 97.3, "iso": 98.8, "internal": 96.8, "training": 93.7 },
+    { "date": "2024-01-07", "gmp": 99.1, "fda": 98.2, "iso": 99.2, "internal": 95.2, "training": 94.1 },
+    { "date": "2024-01-08", "gmp": 97.4, "fda": 96.8, "iso": 98.6, "internal": 96.5, "training": 91.6 },
+    { "date": "2024-01-09", "gmp": 98.7, "fda": 98.9, "iso": 99.4, "internal": 97.3, "training": 94.8 },
+    { "date": "2024-01-10", "gmp": 99.0, "fda": 97.6, "iso": 98.9, "internal": 96.0, "training": 93.2 }
   ],
-  "salesByCategory": [
-    { "name": "Electronics", "value": 450000, "percentage": 35 },
-    { "name": "Clothing", "value": 320000, "percentage": 25 },
-    { "name": "Books", "value": 190000, "percentage": 15 },
-    { "name": "Home & Garden", "value": 160000, "percentage": 12.5 },
-    { "name": "Sports", "value": 130000, "percentage": 10 },
-    { "name": "Others", "value": 32000, "percentage": 2.5 }
+  "deviationsByCategory": [
+    { "name": "Manufacturing", "value": 45, "percentage": 38.5, "critical": 8, "major": 18, "minor": 19 },
+    { "name": "Quality Control", "value": 32, "percentage": 27.4, "critical": 5, "major": 12, "minor": 15 },
+    { "name": "Equipment", "value": 25, "percentage": 21.4, "critical": 4, "major": 9, "minor": 12 },
+    { "name": "Documentation", "value": 15, "percentage": 12.8, "critical": 1, "major": 6, "minor": 8 }
   ],
-  "marketingChannels": [
-    { "channel": "Organic Search", "visitors": 15420, "conversions": 1234, "cost": 0 },
-    { "channel": "Paid Search", "visitors": 8950, "conversions": 892, "cost": 12500 },
-    { "channel": "Social Media", "visitors": 6780, "conversions": 543, "cost": 3200 },
-    { "channel": "Email", "visitors": 4560, "conversions": 789, "cost": 850 },
-    { "channel": "Direct", "visitors": 3200, "conversions": 456, "cost": 0 },
-    { "channel": "Referral", "visitors": 2100, "conversions": 187, "cost": 0 }
+  "manufacturingSites": [
+    { "site": "Main Plant - NJ", "deviations": 67, "compliance": 98.2, "capa": 23, "efficiency": 94.5 },
+    { "site": "Secondary Plant - CA", "deviations": 34, "compliance": 97.8, "capa": 15, "efficiency": 96.1 },
+    { "site": "EU Facility - Ireland", "deviations": 28, "compliance": 99.1, "capa": 12, "efficiency": 95.8 },
+    { "site": "APAC Plant - Singapore", "deviations": 19, "compliance": 98.6, "capa": 8, "efficiency": 97.2 }
   ],
-  "regionalSales": [
-    { "region": "North America", "sales": 420000, "growth": 12.5 },
-    { "region": "Europe", "sales": 380000, "growth": 8.3 },
-    { "region": "Asia Pacific", "sales": 290000, "growth": 15.7 },
-    { "region": "Latin America", "sales": 145000, "growth": 22.1 },
-    { "region": "Middle East", "sales": 95000, "growth": 18.9 },
-    { "region": "Africa", "sales": 62000, "growth": 25.4 }
+  "auditFindings": [
+    { "audit": "FDA Inspection", "findings": 8, "critical": 2, "observations": 6, "status": "closed", "date": "2024-01-15" },
+    { "audit": "Internal GMP", "findings": 12, "critical": 1, "observations": 11, "status": "open", "date": "2024-01-20" },
+    { "audit": "ISO 13485", "findings": 5, "critical": 0, "observations": 5, "status": "closed", "date": "2024-01-25" },
+    { "audit": "Supplier Audit", "findings": 15, "critical": 3, "observations": 12, "status": "in-progress", "date": "2024-01-30" }
   ]
 }

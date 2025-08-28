@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 
 export interface DashboardData {
-  revenue: Array<{ date: string; value: number; category: string }>;
-  userActivity: Array<{ date: string; activeUsers: number; newUsers: number; returningUsers: number }>;
-  performanceMetrics: Array<{ date: string; loadTime: number; errorRate: number; uptime: number }>;
-  salesByCategory: Array<{ name: string; value: number; percentage: number }>;
-  marketingChannels: Array<{ channel: string; visitors: number; conversions: number; cost: number }>;
-  regionalSales: Array<{ region: string; sales: number; growth: number }>;
+  deviations: Array<{ date: string; total: number; critical: number; major: number; minor: number; category: string }>;
+  capa: Array<{ date: string; open: number; inProgress: number; closed: number; overdue: number; effectiveness: number }>;
+  compliance: Array<{ date: string; gmp: number; fda: number; iso: number; internal: number; training: number }>;
+  deviationsByCategory: Array<{ name: string; value: number; percentage: number; critical: number; major: number; minor: number }>;
+  manufacturingSites: Array<{ site: string; deviations: number; compliance: number; capa: number; efficiency: number }>;
+  auditFindings: Array<{ audit: string; findings: number; critical: number; observations: number; status: string; date: string }>;
 }
 
 export const useDashboardData = () => {

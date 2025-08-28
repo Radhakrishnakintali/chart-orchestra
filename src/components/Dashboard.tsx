@@ -4,6 +4,7 @@ import { useDashboardData } from '@/hooks/useDashboardData';
 import { useDateFilter } from '@/hooks/useDateFilter';
 import DashboardHeader from '@/components/DashboardHeader';
 import ChartContainer from '@/components/ChartContainer';
+import DrillDownModal from '@/components/DrillDownModal';
 import { 
   BREAKPOINTS, 
   GRID_COLS, 
@@ -19,7 +20,7 @@ import ScatterChart from '@/charts/ScatterChart';
 import RadarChart from '@/charts/RadarChart';
 import { Card } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { AlertCircle, TrendingUp, Users, DollarSign, Activity } from 'lucide-react';
+import { AlertCircle, TrendingUp, ShieldCheck, AlertTriangle, CheckCircle, Clock } from 'lucide-react';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 
@@ -32,6 +33,21 @@ const Dashboard: React.FC = () => {
   
   // Grid layout configuration with responsive constraints
   const [layouts, setLayouts] = useState(DEFAULT_LAYOUTS);
+  
+  // Drill-down modal state
+  const [drillDownModal, setDrillDownModal] = useState<{
+    isOpen: boolean;
+    title: string;
+    type: 'deviation' | 'capa' | 'compliance' | 'audit';
+    data: any;
+    selectedItem?: any;
+  }>({
+    isOpen: false,
+    title: '',
+    type: 'deviation',
+    data: null,
+    selectedItem: null
+  });
 
   const handleLayoutChange = (layout: any, layouts: any) => {
     setLayouts(layouts);
@@ -39,6 +55,43 @@ const Dashboard: React.FC = () => {
 
   const handleRefresh = () => {
     window.location.reload();
+  };
+
+  const handleChartClick = (chartType: 'deviation' | 'capa' | 'compliance' | 'audit', clickData: any) => {
+    let modalData;
+    let title;
+    let selectedItem;
+
+    switch (chartType) {
+      case 'deviation':
+        modalData = data?.deviations || [];
+        title = `Deviation Details - ${clickData?.payload?.name || clickData?.payload?.category || 'Category'}`;
+        selectedItem = clickData?.payload;
+        break;
+      case 'capa':
+        modalData = data?.capa || [];
+        title = `CAPA Analysis - ${new Date(clickData?.payload?.date || Date.now()).toLocaleDateString()}`;
+        selectedItem = clickData?.payload;
+        break;
+      case 'compliance':
+        modalData = data?.compliance || [];
+        title = `Compliance Metrics - ${new Date(clickData?.payload?.date || Date.now()).toLocaleDateString()}`;
+        selectedItem = clickData?.payload;
+        break;
+      case 'audit':
+        modalData = data?.auditFindings || [];
+        title = `Audit Findings - ${clickData?.payload?.audit || 'Details'}`;
+        selectedItem = clickData?.payload;
+        break;
+    }
+
+    setDrillDownModal({
+      isOpen: true,
+      title,
+      type: chartType,
+      data: modalData,
+      selectedItem
+    });
   };
 
   if (loading) {
@@ -76,109 +129,141 @@ const Dashboard: React.FC = () => {
 
   if (!data) return null;
 
-  // Prepare data for scatter chart (performance metrics)
-  const scatterData = data.performanceMetrics.map(item => ({
-    loadTime: item.loadTime,
-    errorRate: item.errorRate,
-    uptime: item.uptime,
-    date: item.date
+  // Prepare data for scatter chart (deviation correlation)
+  const scatterData = data.deviations.map(item => ({
+    total: item.total,
+    critical: item.critical,
+    major: item.major,
+    date: item.date,
+    category: item.category
   }));
 
-  // Prepare data for radar chart (marketing performance)
-  const radarData = data.marketingChannels.map(item => ({
-    subject: item.channel,
-    conversions: item.conversions,
-    visitors: item.visitors / 100, // Scale down for better visualization
-    roi: item.conversions / (item.cost || 1) * 100
+  // Prepare data for radar chart (site performance)
+  const radarData = data.manufacturingSites.map(item => ({
+    subject: item.site.split(' - ')[0], // Shorten site names
+    deviations: 100 - (item.deviations / 2), // Invert and scale for better viz
+    compliance: item.compliance,
+    efficiency: item.efficiency,
+    capa: 100 - (item.capa * 2) // Invert and scale
   }));
 
-  // Chart data configuration
+  // Chart data configuration with drill-down functionality
   const chartData = {
-    'revenue-trends': {
-      title: "Revenue Trends",
-      data: data.revenue,
+    'deviation-trends': {
+      title: "Deviation Trends",
+      data: data.deviations,
       component: (
-        <LineChart
-          data={filterDataByDate(data.revenue)}
-          dataKeys={['value']}
-          colors={['hsl(var(--chart-primary))']}
-          height={350}
-        />
+        <div
+          onClick={() => handleChartClick('deviation', {})}
+          className="cursor-pointer"
+        >
+          <LineChart
+            data={filterDataByDate(data.deviations)}
+            dataKeys={['total', 'critical', 'major']}
+            colors={['hsl(var(--chart-primary))', 'hsl(var(--chart-danger))', 'hsl(var(--chart-warning))']}
+            height={350}
+          />
+        </div>
       )
     },
-    'user-activity': {
-      title: "User Activity",
-      data: data.userActivity,
+    'capa-status': {
+      title: "CAPA Status Overview",
+      data: data.capa,
       component: (
-        <AreaChart
-          data={filterDataByDate(data.userActivity)}
-          dataKeys={['activeUsers', 'newUsers', 'returningUsers']}
-          colors={['hsl(var(--chart-primary))', 'hsl(var(--chart-secondary))', 'hsl(var(--chart-accent))']}
-          height={350}
-          stacked={true}
-        />
+        <div
+          onClick={() => handleChartClick('capa', {})}
+          className="cursor-pointer"
+        >
+          <AreaChart
+            data={filterDataByDate(data.capa)}
+            dataKeys={['open', 'inProgress', 'closed', 'overdue']}
+            colors={['hsl(var(--chart-warning))', 'hsl(var(--chart-info))', 'hsl(var(--chart-success))', 'hsl(var(--chart-danger))']}
+            height={350}
+            stacked={true}
+          />
+        </div>
       )
     },
-    'performance-metrics': {
-      title: "Performance Metrics",
-      data: data.performanceMetrics,
+    'compliance-metrics': {
+      title: "Compliance Metrics",
+      data: data.compliance,
       component: (
-        <BarChart
-          data={filterDataByDate(data.performanceMetrics)}
-          dataKeys={['loadTime', 'errorRate']}
-          colors={['hsl(var(--chart-warning))', 'hsl(var(--chart-danger))']}
-          height={350}
-        />
+        <div
+          onClick={() => handleChartClick('compliance', {})}
+          className="cursor-pointer"
+        >
+          <BarChart
+            data={filterDataByDate(data.compliance)}
+            dataKeys={['gmp', 'fda', 'iso']}
+            colors={['hsl(var(--chart-primary))', 'hsl(var(--chart-secondary))', 'hsl(var(--chart-accent))']}
+            height={350}
+          />
+        </div>
       )
     },
-    'sales-category': {
-      title: "Sales by Category",
-      data: data.salesByCategory,
+    'deviation-category': {
+      title: "Deviations by Category",
+      data: data.deviationsByCategory,
       component: (
-        <PieChart
-          data={data.salesByCategory}
-          dataKey="value"
-          nameKey="name"
-          height={350}
-        />
+        <div
+          onClick={() => handleChartClick('deviation', {})}
+          className="cursor-pointer"
+        >
+          <PieChart
+            data={data.deviationsByCategory}
+            dataKey="value"
+            nameKey="name"
+            height={350}
+          />
+        </div>
       )
     },
-    'performance-correlation': {
-      title: "Performance Correlation",
+    'deviation-severity': {
+      title: "Deviation vs Critical Correlation",
       data: scatterData,
       component: (
-        <ScatterChart
-          data={scatterData}
-          xDataKey="loadTime"
-          yDataKey="errorRate"
-          colors={['hsl(var(--chart-info))']}
-          height={350}
-        />
+        <div
+          onClick={() => handleChartClick('deviation', {})}
+          className="cursor-pointer"
+        >
+          <ScatterChart
+            data={scatterData}
+            xDataKey="total"
+            yDataKey="critical"
+            colors={['hsl(var(--chart-danger))']}
+            height={350}
+          />
+        </div>
       )
     },
-    'marketing-channels': {
-      title: "Marketing Channels Performance",
+    'site-performance': {
+      title: "Manufacturing Site Performance",
       data: radarData,
       component: (
         <RadarChart
           data={radarData}
-          dataKeys={['conversions', 'visitors', 'roi']}
-          colors={['hsl(var(--chart-primary))', 'hsl(var(--chart-secondary))', 'hsl(var(--chart-accent))']}
+          dataKeys={['compliance', 'efficiency', 'deviations']}
+          colors={['hsl(var(--chart-primary))', 'hsl(var(--chart-success))', 'hsl(var(--chart-warning))']}
           height={350}
         />
       )
     },
-    'regional-sales': {
-      title: "Regional Sales Performance",
-      data: data.regionalSales,
+    'audit-findings': {
+      title: "Audit Findings Summary",
+      data: data.auditFindings,
       component: (
-        <BarChart
-          data={data.regionalSales}
-          dataKeys={['sales', 'growth']}
-          xAxisKey="region"
-          colors={['hsl(var(--chart-primary))', 'hsl(var(--chart-success))']}
-          height={400}
-        />
+        <div
+          onClick={() => handleChartClick('audit', {})}
+          className="cursor-pointer"
+        >
+          <BarChart
+            data={data.auditFindings}
+            dataKeys={['findings', 'critical']}
+            xAxisKey="audit"
+            colors={['hsl(var(--chart-info))', 'hsl(var(--chart-danger))']}
+            height={400}
+          />
+        </div>
       )
     }
   };
@@ -193,18 +278,18 @@ const Dashboard: React.FC = () => {
           dashboardRef={dashboardRef}
         />
 
-        {/* KPI Cards */}
+        {/* Pharmaceutical KPI Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <Card className="bg-gradient-card shadow-card border-dashboard-border p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-muted-foreground text-sm font-medium">Total Revenue</p>
+                <p className="text-muted-foreground text-sm font-medium">Total Deviations</p>
                 <p className="text-2xl font-bold text-foreground">
-                  ${filterDataByDate(data.revenue).reduce((sum, item) => sum + item.value, 0).toLocaleString()}
+                  {filterDataByDate(data.deviations).reduce((sum, item) => sum + item.total, 0)}
                 </p>
               </div>
-              <div className="p-3 bg-chart-primary-bg rounded-lg">
-                <DollarSign className="w-6 h-6 text-chart-primary" />
+              <div className="p-3 bg-chart-danger/10 rounded-lg">
+                <AlertTriangle className="w-6 h-6 text-chart-danger" />
               </div>
             </div>
           </Card>
@@ -212,13 +297,13 @@ const Dashboard: React.FC = () => {
           <Card className="bg-gradient-card shadow-card border-dashboard-border p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-muted-foreground text-sm font-medium">Active Users</p>
+                <p className="text-muted-foreground text-sm font-medium">Open CAPAs</p>
                 <p className="text-2xl font-bold text-foreground">
-                  {filterDataByDate(data.userActivity).reduce((sum, item) => sum + item.activeUsers, 0).toLocaleString()}
+                  {filterDataByDate(data.capa).reduce((sum, item) => sum + item.open + item.overdue, 0)}
                 </p>
               </div>
-              <div className="p-3 bg-chart-secondary-bg rounded-lg">
-                <Users className="w-6 h-6 text-chart-secondary" />
+              <div className="p-3 bg-chart-warning/10 rounded-lg">
+                <Clock className="w-6 h-6 text-chart-warning" />
               </div>
             </div>
           </Card>
@@ -226,26 +311,29 @@ const Dashboard: React.FC = () => {
           <Card className="bg-gradient-card shadow-card border-dashboard-border p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-muted-foreground text-sm font-medium">Avg. Load Time</p>
+                <p className="text-muted-foreground text-sm font-medium">Avg. Compliance</p>
                 <p className="text-2xl font-bold text-foreground">
-                  {(filterDataByDate(data.performanceMetrics).reduce((sum, item) => sum + item.loadTime, 0) / 
-                    filterDataByDate(data.performanceMetrics).length).toFixed(2)}s
+                  {((filterDataByDate(data.compliance).reduce((sum, item) => sum + (item.gmp + item.fda + item.iso) / 3, 0)) / 
+                    filterDataByDate(data.compliance).length).toFixed(1)}%
                 </p>
-              </div>
-              <div className="p-3 bg-chart-accent-bg rounded-lg">
-                <Activity className="w-6 h-6 text-chart-accent" />
-              </div>
-            </div>
-          </Card>
-
-          <Card className="bg-gradient-card shadow-card border-dashboard-border p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-muted-foreground text-sm font-medium">Growth Rate</p>
-                <p className="text-2xl font-bold text-foreground">+24.5%</p>
               </div>
               <div className="p-3 bg-chart-success/10 rounded-lg">
-                <TrendingUp className="w-6 h-6 text-chart-success" />
+                <ShieldCheck className="w-6 h-6 text-chart-success" />
+              </div>
+            </div>
+          </Card>
+
+          <Card className="bg-gradient-card shadow-card border-dashboard-border p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-muted-foreground text-sm font-medium">CAPA Effectiveness</p>
+                <p className="text-2xl font-bold text-foreground">
+                  {(filterDataByDate(data.capa).reduce((sum, item) => sum + item.effectiveness, 0) / 
+                    filterDataByDate(data.capa).length).toFixed(1)}%
+                </p>
+              </div>
+              <div className="p-3 bg-chart-primary/10 rounded-lg">
+                <TrendingUp className="w-6 h-6 text-chart-primary" />
               </div>
             </div>
           </Card>
@@ -279,6 +367,16 @@ const Dashboard: React.FC = () => {
             </div>
           ))}
         </ResponsiveGridLayout>
+
+        {/* Drill-down Modal */}
+        <DrillDownModal
+          isOpen={drillDownModal.isOpen}
+          onClose={() => setDrillDownModal(prev => ({ ...prev, isOpen: false }))}
+          title={drillDownModal.title}
+          type={drillDownModal.type}
+          data={drillDownModal.data}
+          selectedItem={drillDownModal.selectedItem}
+        />
       </div>
     </div>
   );
