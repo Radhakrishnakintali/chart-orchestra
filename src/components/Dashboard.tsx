@@ -130,22 +130,22 @@ const Dashboard: React.FC = () => {
   if (!data) return null;
 
   // Prepare data for scatter chart (deviation correlation)
-  const scatterData = data.deviations.map(item => ({
+  const scatterData = data?.deviations?.map(item => ({
     total: item.total,
     critical: item.critical,
     major: item.major,
     date: item.date,
     category: item.category
-  }));
+  })) || [];
 
   // Prepare data for radar chart (site performance)
-  const radarData = data.manufacturingSites.map(item => ({
+  const radarData = data?.manufacturingSites?.map(item => ({
     subject: item.site.split(' - ')[0], // Shorten site names
     deviations: 100 - (item.deviations / 2), // Invert and scale for better viz
     compliance: item.compliance,
     efficiency: item.efficiency,
     capa: 100 - (item.capa * 2) // Invert and scale
-  }));
+  })) || [];
 
   // Chart data configuration with drill-down functionality
   const chartData = {
