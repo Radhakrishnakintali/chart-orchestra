@@ -73,23 +73,26 @@ const ChartContainer = forwardRef<HTMLDivElement, ChartContainerProps>(({
   };
 
   const ChartContent = () => (
-    <Card ref={ref} className={`bg-dashboard-card shadow-card border-dashboard-border transition-smooth ${className}`}>
-      <div className="p-6">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-foreground drag-handle cursor-move flex-1 mr-4">{title}</h3>
+    <Card ref={ref} className={`bg-gradient-card shadow-elevated border-dashboard-border transition-smooth hover:shadow-modal rounded-xl overflow-hidden ${className}`}>
+      <div className="p-6 bg-gradient-to-br from-white/50 to-transparent">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex-1 mr-4">
+            <h3 className="text-xl font-bold text-foreground drag-handle cursor-move mb-1 tracking-tight">{title}</h3>
+            <div className="h-1 w-12 bg-gradient-primary rounded-full"></div>
+          </div>
           <div 
-            className="flex items-center gap-2 relative z-50"
+            className="flex items-center gap-3 relative z-50"
             style={{ pointerEvents: 'auto' }}
             onMouseDown={(e) => e.stopPropagation()}
             onClick={(e) => e.stopPropagation()}
           >
             <Select value={selectedOption} onValueChange={handleDateRangeChange}>
-              <SelectTrigger className="w-[140px] border-dashboard-border bg-dashboard-card">
-                <SelectValue />
+              <SelectTrigger className="w-[140px] border-dashboard-border/50 bg-white/80 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-200 rounded-lg">
+                <SelectValue className="text-sm font-medium" />
               </SelectTrigger>
-              <SelectContent className="bg-dashboard-card border-dashboard-border">
+              <SelectContent className="bg-white/95 backdrop-blur-md border-dashboard-border/50 shadow-lg rounded-lg">
                 {DATE_RANGE_OPTIONS.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
+                  <SelectItem key={option.value} value={option.value} className="hover:bg-chart-primary-bg rounded-md">
                     {option.label}
                   </SelectItem>
                 ))}
@@ -109,7 +112,7 @@ const ChartContainer = forwardRef<HTMLDivElement, ChartContainerProps>(({
                 console.log("Maximize button clicked!");
                 setIsMaximized(true);
               }}
-              className="border-dashboard-border hover:bg-chart-primary-bg"
+              className="border-dashboard-border/50 bg-white/80 hover:bg-chart-primary hover:text-white hover:border-transparent shadow-sm hover:shadow-md transition-all duration-200 rounded-lg"
               style={{ pointerEvents: 'auto', position: 'relative', zIndex: 100 }}
             >
               <Maximize2 className="w-4 h-4" />
@@ -122,22 +125,22 @@ const ChartContainer = forwardRef<HTMLDivElement, ChartContainerProps>(({
                   size="sm"
                   onMouseDown={(e) => e.stopPropagation()}
                   onClick={(e) => e.stopPropagation()}
-                  className="border-dashboard-border hover:bg-chart-primary-bg"
+                  className="border-dashboard-border/50 bg-white/80 hover:bg-chart-primary hover:text-white hover:border-transparent shadow-sm hover:shadow-md transition-all duration-200 rounded-lg"
                   style={{ pointerEvents: 'auto', position: 'relative', zIndex: 100 }}
                 >
                   <MoreVertical className="w-4 h-4" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48 bg-dashboard-card border-dashboard-border">
-                <DropdownMenuItem onClick={handlePrint} className="cursor-pointer">
+              <DropdownMenuContent align="end" className="w-48 bg-white/95 backdrop-blur-md border-dashboard-border/50 shadow-lg rounded-lg">
+                <DropdownMenuItem onClick={handlePrint} className="cursor-pointer hover:bg-chart-primary-bg rounded-md transition-colors">
                   <Printer className="w-4 h-4 mr-2" />
                   Print
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={handleExportCSV} className="cursor-pointer">
+                <DropdownMenuItem onClick={handleExportCSV} className="cursor-pointer hover:bg-chart-primary-bg rounded-md transition-colors">
                   <Download className="w-4 h-4 mr-2" />
                   Download CSV
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={handleExportExcel} className="cursor-pointer">
+                <DropdownMenuItem onClick={handleExportExcel} className="cursor-pointer hover:bg-chart-primary-bg rounded-md transition-colors">
                   <FileSpreadsheet className="w-4 h-4 mr-2" />
                   Download Excel
                 </DropdownMenuItem>
@@ -146,7 +149,7 @@ const ChartContainer = forwardRef<HTMLDivElement, ChartContainerProps>(({
           </div>
         </div>
         
-        <div ref={chartRef} className="w-full">
+        <div ref={chartRef} className="w-full bg-white/30 rounded-lg p-4 backdrop-blur-sm">
           {React.cloneElement(children as React.ReactElement, { data: filteredData })}
         </div>
       </div>
@@ -158,18 +161,21 @@ const ChartContainer = forwardRef<HTMLDivElement, ChartContainerProps>(({
       <ChartContent />
       
       <Dialog open={isMaximized} onOpenChange={setIsMaximized}>
-        <DialogContent className="max-w-6xl h-[80vh] bg-dashboard-card border-dashboard-border">
+        <DialogContent className="max-w-6xl h-[80vh] bg-gradient-card border-dashboard-border/50 shadow-modal rounded-xl">
           <DialogHeader>
             <div className="flex items-center justify-between">
-              <DialogTitle className="text-xl font-semibold">{title}</DialogTitle>
-              <div className="flex items-center gap-2">
+              <div>
+                <DialogTitle className="text-2xl font-bold text-foreground tracking-tight">{title}</DialogTitle>
+                <div className="h-1 w-16 bg-gradient-primary rounded-full mt-2"></div>
+              </div>
+              <div className="flex items-center gap-3">
                 <Select value={selectedOption} onValueChange={handleDateRangeChange}>
-                  <SelectTrigger className="w-[140px] border-dashboard-border bg-dashboard-card">
-                    <SelectValue />
+                  <SelectTrigger className="w-[140px] border-dashboard-border/50 bg-white/80 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-200 rounded-lg">
+                    <SelectValue className="text-sm font-medium" />
                   </SelectTrigger>
-                  <SelectContent className="bg-dashboard-card border-dashboard-border">
+                  <SelectContent className="bg-white/95 backdrop-blur-md border-dashboard-border/50 shadow-lg rounded-lg">
                     {DATE_RANGE_OPTIONS.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
+                      <SelectItem key={option.value} value={option.value} className="hover:bg-chart-primary-bg rounded-md">
                         {option.label}
                       </SelectItem>
                     ))}
@@ -181,21 +187,21 @@ const ChartContainer = forwardRef<HTMLDivElement, ChartContainerProps>(({
                     <Button
                       variant="outline"
                       size="sm"
-                      className="border-dashboard-border hover:bg-chart-primary-bg"
+                      className="border-dashboard-border/50 bg-white/80 hover:bg-chart-primary hover:text-white hover:border-transparent shadow-sm hover:shadow-md transition-all duration-200 rounded-lg"
                     >
                       <MoreVertical className="w-4 h-4" />
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-48 bg-dashboard-card border-dashboard-border">
-                    <DropdownMenuItem onClick={handlePrint} className="cursor-pointer">
+                  <DropdownMenuContent align="end" className="w-48 bg-white/95 backdrop-blur-md border-dashboard-border/50 shadow-lg rounded-lg">
+                    <DropdownMenuItem onClick={handlePrint} className="cursor-pointer hover:bg-chart-primary-bg rounded-md transition-colors">
                       <Printer className="w-4 h-4 mr-2" />
                       Print
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={handleExportCSV} className="cursor-pointer">
+                    <DropdownMenuItem onClick={handleExportCSV} className="cursor-pointer hover:bg-chart-primary-bg rounded-md transition-colors">
                       <Download className="w-4 h-4 mr-2" />
                       Download CSV
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={handleExportExcel} className="cursor-pointer">
+                    <DropdownMenuItem onClick={handleExportExcel} className="cursor-pointer hover:bg-chart-primary-bg rounded-md transition-colors">
                       <FileSpreadsheet className="w-4 h-4 mr-2" />
                       Download Excel
                     </DropdownMenuItem>
@@ -209,7 +215,7 @@ const ChartContainer = forwardRef<HTMLDivElement, ChartContainerProps>(({
                     e.stopPropagation();
                     setIsMaximized(false);
                   }}
-                  className="border-dashboard-border hover:bg-chart-primary-bg"
+                  className="border-dashboard-border/50 bg-white/80 hover:bg-chart-danger hover:text-white hover:border-transparent shadow-sm hover:shadow-md transition-all duration-200 rounded-lg"
                 >
                   <Minimize2 className="w-4 h-4" />
                 </Button>
@@ -217,7 +223,7 @@ const ChartContainer = forwardRef<HTMLDivElement, ChartContainerProps>(({
             </div>
           </DialogHeader>
           <div className="flex-1 overflow-hidden">
-            <div className="w-full h-full p-4">
+            <div className="w-full h-full p-6 bg-white/30 rounded-lg backdrop-blur-sm">
               {React.cloneElement(children as React.ReactElement, { data: filteredData })}
             </div>
           </div>
